@@ -34,5 +34,3 @@ def card_number_generator(start: int, stop: int) -> Iterator[str]:
                 block_counter = 1
 
         yield string_to_return
-
-
