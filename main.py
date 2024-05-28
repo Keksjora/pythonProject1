@@ -90,7 +90,7 @@ def my_function_1(x, y):
 my_function_1(1, 2)
 
 
-@log(filename="mylog.txt")
+@log()
 def my_function_error(x, y):
     """ "Функция вызова декоратора с ошибкой и сохранения вывода в файл mylog.txt"""
     return x / y
