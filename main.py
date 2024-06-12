@@ -1,6 +1,9 @@
+import os
 from src.decorators import log
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.widget import get_data, mask_account_card
+from src.external_api import convert_to_rub
+from src.utils import get_transactions
 
 print(mask_account_card("MasterCard 7158300734726758"))
 
@@ -72,28 +75,38 @@ for card_number in card_number_generator(1, 5):
     print(card_number)
 
 
-@log(filename="mylog.txt")
-def my_function(x, y):
-    """ "Функция вызова декоратора с файлом сохранения mylog.txt"""
-    return x + y
+# @log(filename="mylog.txt")
+# def my_function(x, y):
+#     """ "Функция вызова декоратора с файлом сохранения mylog.txt"""
+#     return x + y
+#
+#
+# my_function(1, 2)
+#
+#
+# @log()
+# def my_function_1(x, y):
+#     """ "Функция вызова декоратора без файла сохранения и вывод в консоль"""
+#     return x + y
+#
+#
+# my_function_1(1, 2)
+#
+#
+# @log()
+# def my_function_error(x, y):
+#     """ "Функция вызова декоратора с ошибкой и сохранения вывода в файл mylog.txt"""
+#     return x / y
+#
+#
+# my_function_error(1, 0)
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+json_file_path = os.path.join(current_dir, "data", 'operations.json')
+new_transactions = get_transactions(json_file_path)
+print(new_transactions)
 
 
-my_function(1, 2)
-
-
-@log()
-def my_function_1(x, y):
-    """ "Функция вызова декоратора без файла сохранения и вывод в консоль"""
-    return x + y
-
-
-my_function_1(1, 2)
-
-
-@log()
-def my_function_error(x, y):
-    """ "Функция вызова декоратора с ошибкой и сохранения вывода в файл mylog.txt"""
-    return x / y
-
-
-my_function_error(1, 0)
+for transaction in new_transactions:
+    rub_amount = convert_to_rub(transaction)
+    print(f'Transaction amount in Rub: {rub_amount}')
