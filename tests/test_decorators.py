@@ -37,19 +37,16 @@ def test_log_console(capsys):
 def test_log_file_raise():
     @log(filename="mylog.txt")
     def example_function(x, y):
-        raise TypeError("Что-то пошло не так")
+        raise ValueError("Что-то пошло не так")
 
-    with pytest.raises(TypeError, match="Что-то пошло не так"):
+    with pytest.raises(ValueError, match="Что-то пошло не так"):
         example_function(5, 100)
 
     with open(os.path.join(r"logs", "mylog.txt"), "rt") as file:
         for line in file:
             log_string = line
 
-    assert (
-            log_string
-            == "example_function TypeError: Что-то пошло не так. Inputs: (5, 100), {}\n"
-    )
+    assert (log_string == "example_function ValueError: Что-то пошло не так. Inputs: (5, 100), {}\n")
 
 
 # Тест вывода в консоль, если произошла ошибка.
