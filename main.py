@@ -1,9 +1,10 @@
 import os
+
 from src.decorators import log
-from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
-from src.widget import get_data, mask_account_card
 from src.external_api import convert_to_rub
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.utils import get_transactions
+from src.widget import get_data, mask_account_card
 
 print(mask_account_card("MasterCard 7158300734726758"))
 
@@ -102,11 +103,11 @@ for card_number in card_number_generator(1, 5):
 # my_function_error(1, 0)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-json_file_path = os.path.join(current_dir, "data", 'operations.json')
+json_file_path = os.path.join(current_dir, "data", "operations.json")
 new_transactions = get_transactions(json_file_path)
 print(new_transactions)
 
 
 for transaction in new_transactions:
     rub_amount = convert_to_rub(transaction)
-    print(f'Transaction amount in Rub: {rub_amount}')
+    print(f"Transaction amount in Rub: {rub_amount}")

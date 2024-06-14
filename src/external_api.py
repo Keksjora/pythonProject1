@@ -1,7 +1,8 @@
 import os
+from typing import Any, Union
+
 import requests
 from dotenv import load_dotenv
-from typing import Any, Union
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -16,7 +17,9 @@ def convert_to_rub(transaction: dict) -> Union[Any, None]:
         return amount
     elif currency == "USD" or currency == "EUR":
         try:
-            repository = requests.get(API_URL.format(to="RUB", from_=currency, amount=amount), headers={"apikey": API_KEY})
+            repository = requests.get(
+                API_URL.format(to="RUB", from_=currency, amount=amount), headers={"apikey": API_KEY}
+            )
             repository.raise_for_status()
             data = repository.json()
             return data["result"]

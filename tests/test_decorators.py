@@ -46,7 +46,7 @@ def test_log_file_raise():
         for line in file:
             log_string = line
 
-    assert (log_string == "example_function ValueError: Что-то пошло не так. Inputs: (5, 100), {}\n")
+    assert log_string == "example_function ValueError: Что-то пошло не так. Inputs: (5, 100), {}\n"
 
 
 # Тест вывода в консоль, если произошла ошибка.
