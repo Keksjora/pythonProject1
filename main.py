@@ -1,6 +1,6 @@
 import os
 
-from src.decorators import log
+# from src.decorators import log
 from src.external_api import convert_to_rub
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.utils import get_transactions
@@ -102,8 +102,7 @@ for card_number in card_number_generator(1, 5):
 #
 # my_function_error(1, 0)
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-json_file_path = os.path.join(current_dir, "data", "operations.json")
+json_file_path = os.path.join("data", "operations.json")
 new_transactions = get_transactions(json_file_path)
 print(new_transactions)
 
