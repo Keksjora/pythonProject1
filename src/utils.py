@@ -1,6 +1,8 @@
 import json
 import os.path
 
+import pandas as pd
+
 from src.setup_logger import setup_logger
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,3 +27,21 @@ def get_transactions(json_file_path: str) -> list[dict]:
     except Exception:
         logger.error("Ошибка")
         return []
+
+
+def read_transactions_from_csv(csv_file_path: str) -> pd.DataFrame:
+    """Считывает финансовые операции из CSV-файла и возвращает DataFrame."""
+    try:
+        return pd.read_csv(csv_file_path)
+    except Exception as e:
+        print(f"Ошибка при чтении CSV-файла: {e}")
+        return pd.DataFrame()  # Возвращаем пустой DataFrame в случае ошибки
+
+
+def read_transactions_from_excel(excel_file_path: str) -> pd.DataFrame:
+    """Считывает финансовые операции из XLSX-файла и возвращает DataFrame."""
+    try:
+        return pd.read_excel(excel_file_path)
+    except Exception as e:
+        print(f"Ошибка при чтении XLSX-файла: {e}")
+        return pd.DataFrame()  # Возвращаем пустой DataFrame в случае ошибки
