@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from src.utils import get_transactions
+from src.utils import get_transactions, read_transactions_from_csv, read_transactions_from_excel
 
 
 class TestGetTransactions(unittest.TestCase):
@@ -26,3 +26,11 @@ class TestGetTransactions(unittest.TestCase):
     def test_get_transactions_file_not_found_with_patch(self, mock_open):
         transactions = get_transactions("test_file.json")
         self.assertEqual(transactions, [])
+
+    def test_read_transactions_from_csv(self):
+        df = read_transactions_from_csv("data/transactions_csv.csv")
+        self.assertFalse(df.empty)  # Проверяем, что DataFrame не пустой
+
+    def test_read_transactions_from_excel(self):
+        df = read_transactions_from_excel("data/transactions_excel.xlsx")
+        self.assertFalse(df.empty)  # Проверяем, что DataFrame не пустой
