@@ -3,7 +3,13 @@ import os
 # from src.decorators import log
 from src.external_api import convert_to_rub
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
-from src.utils import get_transactions, read_transactions_from_csv, read_transactions_from_excel
+from src.utils import (
+    count_transactions_by_category,
+    filter_transactions_by_description,
+    get_transactions,
+    read_transactions_from_csv,
+    read_transactions_from_excel,
+)
 from src.widget import get_data, mask_account_card
 
 print(mask_account_card("MasterCard 7158300734726758"))
@@ -116,3 +122,91 @@ print(new_transactions_csv)
 excel_file_path = "C:/Users/Admin/PycharmProjects/pythonProject1/data/transactions_excel.xlsx"
 new_transactions_excel = read_transactions_from_excel(excel_file_path)
 print(new_transactions_excel)
+
+
+def main():
+    print("Привет! Добро пожаловать в программу работы с банковскими транзакциями.")
+    file_type = input(
+        """''
+        Выберите необходимый пункт меню:\n1.
+        Получить информацию о транзакциях из JSON-файла\n2.
+        Получить информацию о транзакциях из CSV-файла\n3.
+        Получить информацию о транзакциях из XLSX-файла\n
+        """
+        ""
+    )
+    if file_type not in ["1", "2", "3"]:
+        print("Неверный выбор. Пожалуйста, выберите 1, 2 или 3.")
+        return
+
+    if file_type == "1":
+        transactions_n = new_transactions
+    elif file_type == "2":
+        transactions_n = new_transactions_csv
+    else:
+        transactions_n = new_transactions_excel
+
+    if not transactions_n:
+        print("Не удалось загрузить данные о транзакциях.")
+        return
+
+    status = input(
+        "Введите статус, по которому необходимо выполнить фильтрацию.\n"
+        "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
+    ).lower()
+    if status not in ["executed", "canceled", "pending"]:
+        print("Неверный статус. Пожалуйста, выберите EXECUTED, CANCELED или PENDING.")
+        return
+
+    def filter_transactions_by_status(transactions_list, status):
+        return [t for t in transactions_list if t.get("state", "").lower() == status]
+
+    filtered_transactions = filter_transactions_by_status(transactions, status)
+
+    sort_by_date = input("Отсортировать операции по дате? Да/Нет\n").lower() == "да"
+    if sort_by_date:
+        sort_order = input("Отсортировать по возрастанию или по убыванию?\n").lower()
+        if sort_order == "по возрастанию":
+            filtered_transactions = sorted(filtered_transactions, key=lambda t: t["date"])
+        elif sort_order == "по убыванию":
+            filtered_transactions = sorted(filtered_transactions, key=lambda t: t["date"], reverse=True)
+
+    rub_only = input("Выводить только рублевые тразакции? Да/Нет").lower() == "да"
+    if rub_only:
+        filtered_transactions = [
+            t
+            for t in filtered_transactions
+            if t.get("operationAmount", {}).get("currency", {}).get("code", "") == "RUB"
+        ]
+
+    search_description = (
+        input("Отфильтровать список транзакций по определенному слову в описании? Да/Нет\n").lower() == "да"
+    )
+    if search_description:
+        search_string = input("Введите строку для поиска:\n")
+        filtered_transactions = filter_transactions_by_description(filtered_transactions, search_string)
+
+    if not filtered_transactions:
+        print("Не найдено ни одной транзакции, подходящей под Ваши условия фильтрации.")
+        return
+
+    categories = ["перевод", "покупка", "оплата", "выдача", "возврат"]
+    category_counts = count_transactions_by_category(filtered_transactions, categories)
+
+    print("Результаты фильтрации:\n")
+    for transaction_n in filtered_transactions:
+        date = transaction_n.get("date", "")
+        description = transaction_n.get("description", "")
+        account = transaction_n.get("from", "")
+        amount = transaction_n.get("operationAmount", {}).get("amount", "")
+        currency = transaction_n.get("operationAmount", {}).get("currency", {}).get("code", "")
+        print(f"{date} {description}nСчет {account}nСумма: {amount} {currency}")
+
+    print(f"\nВсего банковских операций в выборке: {len(filtered_transactions)}")
+    print("Количество операций по категориям:")
+    for category, count in category_counts.items():
+        print(f"{category}: {count}")
+
+
+if __name__ == "__main__":
+    main()
