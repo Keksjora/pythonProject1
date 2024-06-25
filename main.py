@@ -151,7 +151,7 @@ def main():
         return
 
     status = input(
-        "Введите статус, по которому необходимо выполнить фильтрацию.\n"
+        "Введите статус, по которому необходимо выполнить фильтрацию\n"
         "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING\n"
     ).lower()
     if status not in ["executed", "canceled", "pending"]:
