@@ -28,9 +28,9 @@ class TestGetTransactions(unittest.TestCase):
         self.assertEqual(transactions, [])
 
     def test_read_transactions_from_csv(self):
-        df = read_transactions_from_csv("data/transactions_csv.csv")
-        self.assertFalse(df.empty)  # Проверяем, что DataFrame не пустой
+        transactions = read_transactions_from_csv("data/transactions_csv.csv")
+        self.assertTrue(transactions)  # Проверяем, что список не пуст
 
     def test_read_transactions_from_excel(self):
-        df = read_transactions_from_excel("data/transactions_excel.xlsx")
-        self.assertFalse(df.empty)  # Проверяем, что DataFrame не пустой
+        transactions = read_transactions_from_excel("data/transactions_excel.xlsx")
+        self.assertTrue(transactions)  # Проверяем, что список не пуст
