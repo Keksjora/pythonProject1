@@ -1,5 +1,6 @@
 import json
 import os.path
+import re
 
 import pandas as pd
 
@@ -29,19 +30,41 @@ def get_transactions(json_file_path: str) -> list[dict]:
         return []
 
 
-def read_transactions_from_csv(csv_file_path: str) -> pd.DataFrame:
-    """Считывает финансовые операции из CSV-файла и возвращает DataFrame."""
+def read_transactions_from_csv(csv_file_path: str) -> list:
+    """Считывает финансовые операции из CSV-файла и возвращает список словарей."""
     try:
-        return pd.read_csv(csv_file_path)
+        df = pd.read_csv(csv_file_path)
+        return df.to_dict(orient="records")
     except Exception as e:
         print(f"Ошибка при чтении CSV-файла: {e}")
-        return pd.DataFrame()  # Возвращаем пустой DataFrame в случае ошибки
+        return []  # Возвращаем пустой список в случае ошибки
 
 
-def read_transactions_from_excel(excel_file_path: str) -> pd.DataFrame:
-    """Считывает финансовые операции из XLSX-файла и возвращает DataFrame."""
+def read_transactions_from_excel(excel_file_path: str) -> list:
+    """Считывает финансовые операции из XLSX-файла и возвращает список словарей."""
     try:
-        return pd.read_excel(excel_file_path)
+        df = pd.read_excel(excel_file_path)
+        return df.to_dict(orient="records")
     except Exception as e:
         print(f"Ошибка при чтении XLSX-файла: {e}")
-        return pd.DataFrame()  # Возвращаем пустой DataFrame в случае ошибки
+        return []  # Возвращаем пустой список в случае ошибки
+
+
+def filter_transactions_by_description(transactions: list, search_string: str) -> list:
+    filtered_transactions = []
+    for transaction in transactions:
+        description = transaction.get("description", "").lower()
+        if re.search(search_string.lower(), description):
+            filtered_transactions.append(transaction)
+    return filtered_transactions
+
+
+def count_transactions_by_category(transactions: list, categories: list) -> dict:
+    category_counts = {}
+    for category in categories:
+        category_counts[category] = 0
+        for transaction in transactions:
+            description = transaction.get("description", "").lower()
+            if re.search(category.lower(), description):
+                category_counts[category] += 1
+    return category_counts
