@@ -1,6 +1,7 @@
 import json
 import os.path
 import re
+from collections import Counter
 
 import pandas as pd
 
@@ -51,6 +52,9 @@ def read_transactions_from_excel(excel_file_path: str) -> list:
 
 
 def filter_transactions_by_description(transactions: list, search_string: str) -> list:
+    """
+    Фильтрует список транзакций по описанию.
+    """
     filtered_transactions = []
     for transaction in transactions:
         description = transaction.get("description", "").lower()
@@ -60,11 +64,13 @@ def filter_transactions_by_description(transactions: list, search_string: str) -
 
 
 def count_transactions_by_category(transactions: list, categories: list) -> dict:
-    category_counts = {}
-    for category in categories:
-        category_counts[category] = 0
-        for transaction in transactions:
-            description = transaction.get("description", "").lower()
+    """
+    Подсчитывает количество транзакций по категориям с использованием Counter.
+    """
+    category_counts = Counter()
+    for transaction in transactions:
+        description = transaction.get("description", "").lower()
+        for category in categories:
             if re.search(category.lower(), description):
                 category_counts[category] += 1
     return category_counts
