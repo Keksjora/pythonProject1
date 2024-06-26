@@ -65,7 +65,7 @@ def filter_transactions_by_description(transactions: list, search_string: str) -
 
 def count_transactions_by_category(transactions: list, categories: list) -> dict:
     """
-    Подсчитывает количество транзакций по категориям с использованием Counter.
+    Функция подсчитывает количество транзакций по категориям с использованием Counter.
     """
     category_counts = Counter()
     for transaction in transactions:
